@@ -17,11 +17,10 @@ jobs:
     - name: Setup PSP toolchain
       run: |
         sudo apt update
-        sudo apt install -y build-essential git cmake python3 wget
-        git clone https://github.com/pspdev/psptoolchain.git
-        cd psptoolchain
-        ./toolchain.sh
-        echo "export PATH=$HOME/pspdev/bin:$PATH" >> $GITHUB_ENV
+        sudo apt install -y build-essential cmake wget git python3
+        wget https://github.com/pspdev/pspdev/releases/latest/download/pspdev-ubuntu-latest.tar.gz
+        tar -xzf pspdev-ubuntu-latest.tar.gz -C $HOME
+        echo "$HOME/pspdev/bin" >> $GITHUB_PATH
 
     - name: Build project
       run: |
