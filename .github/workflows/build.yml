@@ -18,14 +18,18 @@ jobs:
       run: |
         sudo apt update
         sudo apt install -y build-essential git cmake python3 wget
+        export PSPDEV=$HOME/pspdev
+        export PATH=$PSPDEV/bin:$PATH
         git clone https://github.com/pspdev/psptoolchain.git
         cd psptoolchain
         ./toolchain.sh
-        echo "export PATH=$HOME/pspdev/bin:$PATH" >> $GITHUB_ENV
+        echo "PSPDEV=$PSPDEV" >> $GITHUB_ENV
+        echo "PATH=$PSPDEV/bin:$PATH" >> $GITHUB_ENV
 
-    - name: Build project with Makefile
+    - name: Build project
       run: |
-        export PATH="$HOME/pspdev/bin:$PATH"
+        export PSPDEV=$HOME/pspdev
+        export PATH=$PSPDEV/bin:$PATH
         make
 
     - name: Upload artifact
