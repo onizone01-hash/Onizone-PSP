@@ -7,13 +7,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Setup PSP toolchain
-        run: docker pull dockcross/pspdev:latest
+      - name: Setup PSP toolchain (Docker)
+        uses: docker://pspdev/pspdev
 
       - name: Build with make (inside Docker)
-        run: docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace dockcross/pspdev make
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev make
 
       - name: Upload PSP EBOOT
         uses: actions/upload-artifact@v4
