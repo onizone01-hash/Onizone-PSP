@@ -7,16 +7,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Setup Docker (pspdev)
+      - name: Setup PSP toolchain (Docker)
         run: |
           docker pull pspdev/pspdev
 
-      - name: Debug file structure inside Docker
+      - name: Debug workspace
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev ls -R
+          echo "===== WORKSPACE FILES ====="
+          ls -R
 
-      - name: Build with make
+      - name: Debug inside Docker
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev make
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev bash -c "echo '===== FILES IN DOCKER ====='; ls -R"
+
+      - name: Build with make (inside Docker)
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev make V=1
