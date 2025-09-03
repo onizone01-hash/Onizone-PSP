@@ -9,15 +9,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup PSP toolchain (Docker)
-        uses: docker://dockcross/pspdev:latest
+      - name: Setup PSP toolchain
+        run: docker pull dockcross/pspdev:latest
 
-      - name: Build with make
-        run: |
-          make
+      - name: Build with make (inside Docker)
+        run: docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace dockcross/pspdev make
 
       - name: Upload PSP EBOOT
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: EBOOT
           path: EBOOT.PBP
