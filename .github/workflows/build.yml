@@ -9,16 +9,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: pspdev/pspdev:latest   # ใช้ docker image ที่มี toolchain แล้ว
 
     steps:
     - name: Checkout repo
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
-    - name: Build project
+    - name: Setup PSP toolchain
       run: |
-        export PATH="/usr/local/pspdev/bin:$PATH"
+        sudo apt update
+        sudo apt install -y build-essential git cmake python3 wget
+        git clone https://github.com/pspdev/psptoolchain.git
+        cd psptoolchain
+        ./toolchain.sh
+        echo "export PATH=$HOME/pspdev/bin:$PATH" >> $GITHUB_ENV
+
+    - name: Build project with Makefile
+      run: |
+        export PATH="$HOME/pspdev/bin:$PATH"
         make
 
     - name: Upload artifact
