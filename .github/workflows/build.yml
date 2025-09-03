@@ -1,42 +1,21 @@
 name: Build PSP Game
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    env:
-      PSPDEV: ${{ github.workspace }}/pspdev
-      PSPSDK: ${{ github.workspace }}/pspdev/psp/sdk
-
     steps:
     - name: Checkout repo
       uses: actions/checkout@v3
 
-    - name: Setup PSP toolchain
+    - name: Build with pspdev Docker
       run: |
-        sudo apt update
-        sudo apt install -y build-essential git cmake python3 wget
-        git clone https://github.com/pspdev/psptoolchain.git
-        cd psptoolchain
-        ./toolchain.sh
-        echo "$PSPDEV/bin" >> $GITHUB_PATH
+        docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev make
 
-    - name: Build project
-      run: |
-        export PATH="$PSPDEV/bin:$PATH"
-        make
-
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
+    - name: Upload EBOOT.PBP
+      uses: actions/upload-artifact@v3
       with:
-        name: PSP-Game
-        path: |
-          *.iso
-          *.cso
-          EBOOT.PBP
+        name: EBOOT
+        path: EBOOT.PBP
