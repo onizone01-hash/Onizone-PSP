@@ -1,0 +1,38 @@
+name: Build PSP Game
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Setup PSP toolchain
+      run: |
+        sudo apt update
+        sudo apt install -y build-essential git cmake python3 wget
+        git clone https://github.com/pspdev/psptoolchain.git
+        cd psptoolchain
+        ./toolchain.sh
+        echo "export PATH=$HOME/pspdev/bin:$PATH" >> $GITHUB_ENV
+
+    - name: Build project
+      run: |
+        export PATH="$HOME/pspdev/bin:$PATH"
+        make
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: PSP-Game
+        path: |
+          *.iso
+          *.cso
+          EBOOT.PBP
