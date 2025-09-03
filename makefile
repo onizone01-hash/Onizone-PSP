@@ -1,6 +1,7 @@
 TARGET = EBOOT.PBP
-OBJS = $(patsubst %.c, %.o, $(wildcard Onizone_PSP_Demo_Source/*.c)) \
-       $(patsubst %.cpp, %.o, $(wildcard Onizone_PSP_Demo_Source/*.cpp))
+
+OBJS = $(patsubst %.c,%.o,$(wildcard Onizone_PSP_Demo_Source/*.c)) \
+       $(patsubst %.cpp,%.o,$(wildcard Onizone_PSP_Demo_Source/*.cpp))
 
 INCDIR =
 CFLAGS = -O2 -G0 -Wall
@@ -12,7 +13,7 @@ LIBS = -lpspdebug -lpspdisplay -lpspctrl -lpspkernel
 BUILD_PRX = 1
 
 PSP_EBOOT_TITLE = Onizone PSP Demo
-# ถ้าไม่มีไอคอนพวกนี้ ลบทิ้งได้
+# ถ้าไม่มี icon/pic1 คอมเมนต์ไว้ ไม่งั้น build error
 # PSP_EBOOT_ICON = ICON0.PNG
 # PSP_EBOOT_PIC1 = PIC1.PNG
 
