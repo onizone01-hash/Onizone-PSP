@@ -10,18 +10,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Setup PSP toolchain (Docker)
-        run: |
-          docker pull pspdev/pspdev
+        uses: docker://dockcross/pspdev:latest
 
-      - name: Debug workspace
+      - name: Build with make
         run: |
-          echo "===== WORKSPACE FILES ====="
-          ls -R
+          make
 
-      - name: Debug inside Docker
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev bash -c "echo '===== FILES IN DOCKER ====='; ls -R"
-
-      - name: Build with make (inside Docker)
-        run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace pspdev/pspdev make V=1
+      - name: Upload PSP EBOOT
+        uses: actions/upload-artifact@v3
+        with:
+          name: EBOOT
+          path: EBOOT.PBP
